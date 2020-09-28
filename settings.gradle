@@ -1,4 +1,6 @@
+include ':viewbinder-lib'
+include ':viewbinder-apt'
 include ':annotation'
 include ':apt'
 include ':app'
-rootProject.name = "AptDemo"
+rootProject.name = "ViewBinder"

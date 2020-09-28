@@ -6,7 +6,7 @@ dependencies {
     // 由于Gradle 5.0将忽略compile classpath中的 annotationProcessor，因此需要手动添加 annotationProcessor 'com.google.auto.service:auto-service:1.0-rc7'
     annotationProcessor 'com.google.auto.service:auto-service:1.0-rc7'
     implementation 'com.squareup:javapoet:1.11.1'
-    implementation project(path: ':annotation')
+    implementation project(path: ':viewbinder-lib')
 }
 
 sourceCompatibility = "1.7"

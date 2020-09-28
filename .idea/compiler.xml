@@ -17,12 +17,13 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.1/ed28ded51a8b1c6b112568def5f4b455e6809019/j2objc-annotations-1.1.jar" />
         </processorPath>
-        <module name="apt" />
+        <module name="viewbinder-apt" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="annotation" target="1.7" />
-      <module name="apt" target="1.7" />
+      <module name="lib" target="1.7" />
+      <module name="viewbinder-apt" target="1.7" />
+      <module name="viewbinder-lib" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

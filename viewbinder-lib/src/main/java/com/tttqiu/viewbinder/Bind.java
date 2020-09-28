@@ -1,4 +1,4 @@
-package com.example.annotation;
+package com.tttqiu.viewbinder;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
