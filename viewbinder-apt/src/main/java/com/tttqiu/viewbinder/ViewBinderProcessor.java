@@ -70,8 +70,8 @@ public class ViewBinderProcessor extends AbstractProcessor {
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addParameter(ClassName.get(typeElement), "activity");
         for (VariableElement variableElement : mTypeElements.get(typeElement)) {
-            methodBuilder.addStatement("activity.$N = activity.findViewById($L)",
-                    variableElement.getSimpleName(),
+            methodBuilder.addStatement("activity.$N = ($T)activity.findViewById($L)",
+                    variableElement.getSimpleName(), variableElement,
                     variableElement.getAnnotation(Bind.class).value());
         }
         TypeSpec typeSpec = TypeSpec.classBuilder(typeElement.getSimpleName() + "_ViewBinding")
