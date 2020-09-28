@@ -1,6 +1,5 @@
-package com.example.apt;
+package com.tttqiu.viewbinder;
 
-import com.example.annotation.Bind;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -20,7 +19,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedOptions;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -28,7 +26,7 @@ import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 
 @AutoService(Processor.class)
-@SupportedAnnotationTypes("com.example.annotation.Bind")
+@SupportedAnnotationTypes("com.tttqiu.viewbinder.Bind")
 //@SupportedOptions("")
 public class ViewBinderProcessor extends AbstractProcessor {
 
@@ -36,7 +34,7 @@ public class ViewBinderProcessor extends AbstractProcessor {
     private Filer mFiler;
 
     // Activities
-    private  Map<TypeElement, Set<VariableElement>> mTypeElements = new HashMap<>();
+    private Map<TypeElement, Set<VariableElement>> mTypeElements = new HashMap<>();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
@@ -49,8 +47,8 @@ public class ViewBinderProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         Set<VariableElement> elements = ElementFilter.fieldsIn(roundEnvironment.getElementsAnnotatedWith(Bind.class));
         for (VariableElement element : elements) {
-            TypeElement typeElement = (TypeElement)element.getEnclosingElement();
-            Set<VariableElement> variableElements =mTypeElements.get(typeElement);
+            TypeElement typeElement = (TypeElement) element.getEnclosingElement();
+            Set<VariableElement> variableElements = mTypeElements.get(typeElement);
             if (variableElements == null) {
                 Set<VariableElement> newSet = new HashSet<>();
                 newSet.add(element);
@@ -60,7 +58,7 @@ public class ViewBinderProcessor extends AbstractProcessor {
             }
         }
 
-        for (TypeElement typeElement  : mTypeElements.keySet()) {
+        for (TypeElement typeElement : mTypeElements.keySet()) {
             buildJava(typeElement);
         }
 
@@ -70,17 +68,18 @@ public class ViewBinderProcessor extends AbstractProcessor {
     private void buildJava(TypeElement typeElement) {
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("bind")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .addParameter(ClassName.get(typeElement),"activity");
-        for (VariableElement  variableElement : mTypeElements.get(typeElement)) {
-            methodBuilder.addStatement("activity.$S = ($T)findViewById($L)",
-                    variableElement.getSimpleName(), variableElement.asType(),
+                .addParameter(ClassName.get(typeElement), "activity");
+        for (VariableElement variableElement : mTypeElements.get(typeElement)) {
+            methodBuilder.addStatement("activity.$N = activity.findViewById($L)",
+                    variableElement.getSimpleName(),
                     variableElement.getAnnotation(Bind.class).value());
         }
-        TypeSpec typeSpec = TypeSpec.classBuilder(typeElement.getSimpleName() + "_binding")
-                .addModifiers(Modifier.PUBLIC,Modifier.FINAL)
+        TypeSpec typeSpec = TypeSpec.classBuilder(typeElement.getSimpleName() + "_ViewBinding")
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .addJavadoc("This file is auto-generated. Do not modify!")
                 .addMethod(methodBuilder.build())
                 .build();
-        JavaFile file = JavaFile.builder(ClassName.get(typeElement).packageName(),typeSpec).build();
+        JavaFile file = JavaFile.builder(ClassName.get(typeElement).packageName(), typeSpec).build();
         try {
             file.writeTo(mFiler);
         } catch (IOException e) {
